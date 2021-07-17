@@ -1,42 +1,28 @@
-import { formatFiles, generateFiles, getWorkspaceLayout, names, offsetFromRoot, Tree } from '@nrwl/devkit'
-import * as path from 'path'
+import { formatFiles, Tree } from '@nrwl/devkit'
+import { applicationGenerator as nestApplicationGenerator } from '@nrwl/nest'
+import { addFiles, normalizeOptions } from '@nxpm/common'
+import { join } from 'path'
+import { generatorApiE2e } from '../api-e2e/generator-api-e2e'
 import { ApiGeneratorSchema } from './schema'
 
-interface NormalizedSchema extends ApiGeneratorSchema {
-  projectName: string
-  projectRoot: string
-  projectDirectory: string
-  parsedTags: string[]
-}
-
-function normalizeOptions(host: Tree, options: ApiGeneratorSchema): NormalizedSchema {
-  const name = names(options.name).fileName
-  const projectDirectory = options.directory ? `${names(options.directory).fileName}/${name}` : name
-  const projectName = projectDirectory.replace(new RegExp('/', 'g'), '-')
-  const projectRoot = `${getWorkspaceLayout(host).libsDir}/${projectDirectory}`
-  const parsedTags = options.tags ? options.tags.split(',').map((s) => s.trim()) : []
-
-  return {
-    ...options,
-    projectName,
-    projectRoot,
-    projectDirectory,
-    parsedTags,
-  }
-}
-
-function addFiles(host: Tree, options: NormalizedSchema) {
-  const templateOptions = {
-    ...options,
-    ...names(options.name),
-    offsetFromRoot: offsetFromRoot(options.projectRoot),
-    template: '',
-  }
-  generateFiles(host, path.join(__dirname, 'files'), options.projectRoot, templateOptions)
-}
-
 export async function generatorApi(host: Tree, options: ApiGeneratorSchema) {
-  const normalizedOptions = normalizeOptions(host, options)
-  addFiles(host, normalizedOptions)
+  const normalizedOptions = normalizeOptions(host, options, 'application')
+  await nestApplicationGenerator(host, {
+    ...normalizedOptions,
+    name: normalizedOptions.name,
+  })
+  addFiles(host, normalizedOptions, join(__dirname, 'files'))
+
+  // api e2e
+  await generatorApiE2e(host, {
+    ...normalizedOptions,
+    name: `${normalizedOptions.name}-e2e`,
+  })
+
+  // api feature account
+  // api feature auth
+  // api feature core
+  // api feature user
+
   await formatFiles(host)
 }

@@ -1,13 +1,13 @@
 import { createTreeWithEmptyWorkspace } from '@nrwl/devkit/testing'
-import { Tree } from '@nrwl/devkit'
+import { readJson, readProjectConfiguration, Tree } from '@nrwl/devkit'
+import { AppTypeApi, AppTypeMobile, AppTypeWeb } from '@nxpm/common'
 
 import { generatorInit } from './generator-init'
-
 import { InitGeneratorSchema } from './schema'
 
 describe('init generator', () => {
   let appTree: Tree
-  const options: InitGeneratorSchema = { name: 'test' }
+  const options: InitGeneratorSchema = { name: 'test', apiName: 'test-api' }
 
   beforeEach(() => {
     appTree = createTreeWithEmptyWorkspace()
@@ -15,10 +15,19 @@ describe('init generator', () => {
 
   it('should run successfully', async () => {
     await generatorInit(appTree, options)
-    // const config = readProjectConfiguration(appTree, 'test')
-    const files = appTree.children('.')
-    console.log(files)
-    expect(appTree.children('.')).toBeDefined()
+    const configApi = readProjectConfiguration(appTree, options.apiName)
+    expect(configApi).toBeDefined()
+
+    const pathAppsApi = `apps/${options.apiName}`
+    const filesApiRoot = appTree.children(`${pathAppsApi}`)
+    const filesApiSrc = appTree.children(`${pathAppsApi}/src`)
+    const filesApiApp = appTree.children(`${pathAppsApi}/src/app`)
+    expect(filesApiRoot).toMatchSnapshot()
+    expect(filesApiSrc).toMatchSnapshot()
+    expect(filesApiApp).toMatchSnapshot()
+
+    const nxpmJson = readJson(appTree, 'nxpm.json')
+    expect(nxpmJson).toMatchSnapshot()
   })
 })
 
@@ -29,6 +38,9 @@ describe('init generator: custom options', () => {
     apiName: 'server',
     mobileName: 'native',
     webName: 'frontend',
+    apiType: AppTypeApi.nest,
+    mobileType: AppTypeMobile.ionicAngular,
+    webType: AppTypeWeb.angular,
   }
 
   beforeEach(() => {
@@ -37,9 +49,20 @@ describe('init generator: custom options', () => {
 
   it('should run successfully', async () => {
     await generatorInit(appTree, options)
-    // const config = readProjectConfiguration(appTree, 'test')
-    const files = appTree.children('.')
-    console.log(files)
+    const configApi = readProjectConfiguration(appTree, options.apiName)
+    expect(configApi).toBeDefined()
+
+    const pathAppsApi = `apps/${options.apiName}`
+    const filesApiRoot = appTree.children(`${pathAppsApi}`)
+    const filesApiSrc = appTree.children(`${pathAppsApi}/src`)
+    const filesApiApp = appTree.children(`${pathAppsApi}/src/app`)
+    expect(filesApiRoot).toMatchSnapshot()
+    expect(filesApiSrc).toMatchSnapshot()
+    expect(filesApiApp).toMatchSnapshot()
+
     expect(appTree.children('.')).toBeDefined()
+
+    const nxpmJson = readJson(appTree, 'nxpm.json')
+    expect(nxpmJson).toMatchSnapshot()
   })
 })
