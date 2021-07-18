@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`init generator should run successfully 1`] = `
+exports[`init generator should run successfully with default options 1`] = `
 Array [
   "src",
   "tsconfig.app.json",
@@ -11,28 +11,22 @@ Array [
 ]
 `;
 
-exports[`init generator should run successfully 2`] = `
+exports[`init generator should run successfully with default options 2`] = `
 Array [
   "app",
   "assets",
   "environments",
   "main.ts",
-  "index.ts",
 ]
 `;
 
-exports[`init generator should run successfully 3`] = `
+exports[`init generator should run successfully with default options 3`] = `
 Array [
-  ".gitkeep",
-  "app.controller.spec.ts",
-  "app.controller.ts",
   "app.module.ts",
-  "app.service.spec.ts",
-  "app.service.ts",
 ]
 `;
 
-exports[`init generator should run successfully 4`] = `
+exports[`init generator should run successfully with default options 4`] = `
 Object {
   "projects": Object {
     "api": Object {
@@ -51,7 +45,7 @@ Object {
 }
 `;
 
-exports[`init generator: custom options should run successfully 1`] = `
+exports[`init generator: custom options should run successfully with custom options 1`] = `
 Array [
   "src",
   "tsconfig.app.json",
@@ -62,28 +56,22 @@ Array [
 ]
 `;
 
-exports[`init generator: custom options should run successfully 2`] = `
+exports[`init generator: custom options should run successfully with custom options 2`] = `
 Array [
   "app",
   "assets",
   "environments",
   "main.ts",
-  "index.ts",
 ]
 `;
 
-exports[`init generator: custom options should run successfully 3`] = `
+exports[`init generator: custom options should run successfully with custom options 3`] = `
 Array [
-  ".gitkeep",
-  "app.controller.spec.ts",
-  "app.controller.ts",
   "app.module.ts",
-  "app.service.spec.ts",
-  "app.service.ts",
 ]
 `;
 
-exports[`init generator: custom options should run successfully 4`] = `
+exports[`init generator: custom options should run successfully with custom options 4`] = `
 Object {
   "projects": Object {
     "api": Object {
